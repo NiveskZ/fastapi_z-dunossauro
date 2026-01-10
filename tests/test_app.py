@@ -61,15 +61,13 @@ def test_update_user(client):
 
 # Exercicio Aula 03
 def test_read_user_id(client):
-    response = client.get(
-        '/users/1'
-    )
+    response = client.get('/users/1')
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
         'username': 'bob',
         'email': 'bob@example.com',
-        'id': 1
+        'id': 1,
     }
 
 
@@ -110,9 +108,7 @@ def test_not_found_delete(client):
 
 # Exercicio Aula 03
 def test_read_user_id_not_found(client):
-    response = client.get(
-        '/users/-1'
-    )
+    response = client.get('/users/-1')
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'ID de usuário inválido'}
