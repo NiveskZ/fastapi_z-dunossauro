@@ -59,6 +59,20 @@ def test_update_user(client):
     }
 
 
+# Exercicio Aula 03
+def test_read_user_id(client):
+    response = client.get(
+        '/users/1'
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'username': 'bob',
+        'email': 'bob@example.com',
+        'id': 1
+    }
+
+
 def test_delete_user(client):
     response = client.delete('/users/1')
     assert response.status_code == HTTPStatus.OK
@@ -67,3 +81,38 @@ def test_delete_user(client):
         'email': 'bob@example.com',
         'id': 1,
     }
+
+
+# Exercicios aula 03
+def test_not_found_put(client):
+    response = client.put(
+        '/users/-1',
+        json={
+            'username': 'chico',
+            'email': 'chico@example.com',
+            'password': 'secret',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'Deu ruim! User not found!'}
+
+
+# Exercicio Aula 03
+def test_not_found_delete(client):
+    response = client.delete(
+        '/users/-1',
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'Deu ruim! User not found!'}
+
+
+# Exercicio Aula 03
+def test_read_user_id_not_found(client):
+    response = client.get(
+        '/users/-1'
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'ID de usuário inválido'}

@@ -76,3 +76,16 @@ def ola_mundo():
         <h1> Olá Mundo </h1>
       </body>
     </html>"""
+
+
+# Exercicio aula 03
+@app.get(
+    '/users/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic
+)
+def read_user_id(user_id: int):
+    if user_id < 1 or user_id > len(database):
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='ID de usuário inválido'
+        )
+
+    return database[user_id - 1]
