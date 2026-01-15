@@ -144,7 +144,7 @@ def test_create_user_conflict(client, user):
     response = client.post(
         '/users',
         json={
-            'username': 'Teste',
+            'username': user.username,
             'email': 'fausto@example.com',
             'password': 'secret',
         },
@@ -158,7 +158,7 @@ def test_create_user_conflict_email(client, user):
         '/users',
         json={
             'username': 'Fausto',
-            'email': 'teste@teste.com',
+            'email': user.email,
             'password': 'secret',
         },
     )
