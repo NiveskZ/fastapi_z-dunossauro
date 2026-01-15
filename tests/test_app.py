@@ -70,7 +70,7 @@ def test_update_user(client, user):
 # Exercicio Aula 03
 def test_read_user_id(client, user):
     user_schema = UserPublic.model_validate(user).model_dump()
-    response = client.get('/users/1')
+    response = client.get(f'/users/{user.id}')
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == user_schema
