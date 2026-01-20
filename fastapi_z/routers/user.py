@@ -119,8 +119,8 @@ async def delete_user(
 
 # Exercicio aula 03
 @router.get('/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublic)
-def read_user_id(user_id: int, session: Session):
-    user_db = session.scalar(select(User).where(User.id == user_id))
+async def read_user_id(user_id: int, session: Session):
+    user_db = await session.scalar(select(User).where(User.id == user_id))
     if not user_db:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail='ID de usuário inválido'

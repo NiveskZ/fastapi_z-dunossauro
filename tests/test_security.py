@@ -23,3 +23,28 @@ def test_jwt_invalid_token(client):
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert response.json() == {'detail': 'Could not validate credentials'}
+
+
+# Exercicio Aula 06
+def test_credentials_exception_subject(client):
+    data = {'email': 'batata'}
+    token = create_access_token(data)
+
+    response = client.delete(
+        '/users/1', headers={'Authorization': f'Bearer {token}'}
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Could not validate credentials'}
+
+
+def test_credentials_exception_user(client):
+    data = {'sub': 'batata'}
+    token = create_access_token(data)
+
+    response = client.delete(
+        '/users/1', headers={'Authorization': f'Bearer {token}'}
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Could not validate credentials'}
