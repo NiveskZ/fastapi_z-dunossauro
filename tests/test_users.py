@@ -82,23 +82,14 @@ def test_read_user_id_not_found(client):
     assert response.json() == {'detail': 'ID de usuário inválido'}
 
 
-def test_update_integrity_error(client, user, token):
-    client.post(
-        '/users',
-        headers={'Authorization': f'Bearer {token}'},
-        json={
-            'username': 'fausto',
-            'email': 'fausto@example.com',
-            'password': 'secret',
-        },
-    )
+def test_update_integrity_error(client, user, other_user, token):
 
     response = client.put(
         f'/users/{user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
-            'username': 'fausto',
-            'email': 'bob@example.com',
+            'username': f'{other_user.username}',
+            'email': f'{other_user.email}',
             'password': 'mynewpassword',
         },
     )
