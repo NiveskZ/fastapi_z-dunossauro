@@ -107,19 +107,9 @@ def test_update_integrity_error(client, user, token):
     assert response.json() == {'detail': 'Username or Email already exists'}
 
 
-def test_update_forbidden(client, user, token):
-    client.post(
-        '/users',
-        headers={'Authorization': f'Bearer {token}'},
-        json={
-            'username': 'alice',
-            'email': 'alice@example.com',
-            'password': 'secret',
-        },
-    )
-
+def test_update_forbidden(client, other_user, token):
     response = client.put(
-        f'/users/{user.id + 1}',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'fausto',
@@ -132,19 +122,9 @@ def test_update_forbidden(client, user, token):
     assert response.json() == {'detail': 'Not enough permissions'}
 
 
-def test_delet_forbidden(client, user, token):
-    client.post(
-        '/users',
-        headers={'Authorization': f'Bearer {token}'},
-        json={
-            'username': 'alice',
-            'email': 'alice@example.com',
-            'password': 'secret',
-        },
-    )
-
+def test_delete_forbidden(client, other_user, token):
     response = client.delete(
-        f'/users/{user.id + 1}',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
     )
 
