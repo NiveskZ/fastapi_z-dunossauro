@@ -1,8 +1,9 @@
 from http import HTTPStatus
 
 import factory.fuzzy
+import psycopg.errors as pg_errors
 import pytest
-from sqlalchemy import select
+from sqlalchemy.exc import DBAPIError
 
 from fastapi_z.models import Todo, TodoState, User
 
@@ -263,17 +264,17 @@ async def test_create_todo_state_error(session, user: User):
     todo = TodoFactory(state='Test', user_id=user.id)
 
     session.add(todo)
-    await session.commit()
 
-    with pytest.raises(LookupError):
-        await session.scalar(select(Todo))
+    with pytest.raises((DBAPIError, pg_errors.InvalidTextRepresentation)):
+        await session.commit()
+
+    await session.rollback()
 
 
 def test_list_todos_filter_min_length(client, token):
     string = 'a'
     response = client.get(
-        f'todos/?title={string}',
-        headers={'Authorization': f'Bearer {token}'}
+        f'todos/?title={string}', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
@@ -282,8 +283,7 @@ def test_list_todos_filter_min_length(client, token):
 def test_list_todos_filter_max_length(client, token):
     string = 'a' * 22
     response = client.get(
-        f'todos/?title={string}',
-        headers={'Authorization': f'Bearer {token}'}
+        f'todos/?title={string}', headers={'Authorization': f'Bearer {token}'}
     )
 
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
